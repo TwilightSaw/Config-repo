@@ -1,0 +1,59 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  dockerCI:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source code
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            TwilightSaw/nginx-image:latest
+            TwilightSaw/nginx-image:latest-amd64
+            TwilightSaw/nginx-image:latest-arm64
+
+  kubernetesCI:
+    runs-on: ubuntu-latest
+    needs: dockerCI
+    steps:
+      - name: Checkout Config repository
+        uses: actions/checkout@v2
+        with:
+          repository: TwilightSaw/my-kubernetes-config
+          path: Config
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "GitHub Actions"
+
+      - name: Update Kubernetes manifests
+        run: |
+          sed -i 's|old-image|TwilightSaw/nginx-image|g' ./Config/*.yaml
+          git add .
+          git commit -m "Update image references"
+          git push origin main
