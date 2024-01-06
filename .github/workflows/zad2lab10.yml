@@ -48,7 +48,7 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.email "you@example.com"
+          git config --global user.email "blackpanterastudio@gmail.com"
           git config --global user.name "GitHub Actions"
 
       - name: Update Kubernetes manifests
