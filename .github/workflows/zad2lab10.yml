@@ -56,13 +56,11 @@ jobs:
         run: |
           git config --global user.email "blackpanterastudio@gmail.com"
           git config --global user.name "GitHub Actions"
-      - name: Update Kubernetes manifests
+      - name: Update YAML files
         run: |
-          $yamlFiles = Get-ChildItem -Path C:\Users\Alex\Documents\GitHub\Config-repo -Filter *.yaml -Recurse
+          $yamlFiles = Get-ChildItem -Path ${{ github.workspace }}/Config-repo -Filter *.yaml -Recurse
           foreach ($file in $yamlFiles) {
-              (Get-Content $file.FullName) | ForEach-Object {
-                  $_ -replace 'old-image', 'TwilightSaw/nginx-image'
-              } | Set-Content $file.FullName
+            (Get-Content $file.FullName) -replace 'old-image', 'twilightsaw/nginx-image' | Set-Content $file.FullName
           }
           git add .
           git commit -m "Update image references"
