@@ -38,9 +38,9 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            TwilightSaw/nginx-image:latest
-            TwilightSaw/nginx-image:latest-amd64
-            TwilightSaw/nginx-image:latest-arm64
+            twilightsaw/nginx-image:latest
+            twilightsaw/nginx-image:latest-amd64
+            twilightsaw/nginx-image:latest-arm64
 
   kubernetesCI:
     runs-on: ubuntu-latest
