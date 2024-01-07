@@ -50,7 +50,8 @@ jobs:
           
         - name: Update YAML files
           run: |
-            sed -i 's/old-image/twilightsaw\/nginx-image/g' ./Config-repo/*.yaml
+            sed -i 's/old-image/twilightsaw\/nginx-image/g' ./*.yaml
+
             
         - name: Configure Git
           run: |
