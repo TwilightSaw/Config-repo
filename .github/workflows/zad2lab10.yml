@@ -74,13 +74,14 @@ jobs:
       - name: Update Kubernetes manifests
         shell: pwsh
         run: |
-          $yamlFiles = Get-ChildItem -Path ./Config-repo -Filter *.yaml -Recurse
-          foreach ($file in $yamlFiles) {
-              (Get-Content $file.FullName) -replace 'old-image', 'twilightsaw/nginx-image' | Set-Content $file.FullName
-          }
-          git add .
-          git commit -m "Update image references"
-          git push origin main
+            git checkout main  # Ensure you're on the main branch
+            $yamlFiles = Get-ChildItem -Path ./Config-repo -Filter *.yaml -Recurse
+            foreach ($file in $yamlFiles) {
+                (Get-Content $file.FullName) -replace 'old-image', 'twilightsaw/nginx-image' | Set-Content $file.FullName
+            }
+            git add .
+            git commit -m "Update image references"
+            git push origin main
 
 
 
