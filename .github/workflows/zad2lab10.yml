@@ -43,28 +43,25 @@ jobs:
             twilightsaw/nginx-image:latest-arm64
 
   kubernetesCI:
-     runs-on: ubuntu-latest
-     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Update YAML files
-        shell: pwsh
-        run: |
-          $yamlFiles = Get-ChildItem -Path ./Config-repo -Filter *.yaml -Recurse
-          foreach ($file in $yamlFiles) {
-              (Get-Content $file.FullName) -replace 'old-image', 'twilightsaw/nginx-image' | Set-Content $file.FullName
-          }
-      
-      - name: Configure Git
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git add .
-          git commit -m "Update image references"
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+          
+        - name: Update YAML files
+          run: |
+            sed -i 's/old-image/twilightsaw\/nginx-image/g' ./Config-repo/*.yaml
+            
+        - name: Configure Git
+          run: |
+            git config --global user.email "actions@github.com"
+            git config --global user.name "GitHub Actions"
+            git add .
+            git commit -m "Update image references"
+            git push origin main
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
 
 
 
