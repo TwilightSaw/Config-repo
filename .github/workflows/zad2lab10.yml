@@ -47,7 +47,7 @@ jobs:
     needs: dockerCI
     steps:
       - name: Checkout Config repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
         with:
           repository: TwilightSaw/Config-repo
           path: Config-repo
