@@ -43,6 +43,7 @@ jobs:
             twilightsaw/nginx-image:latest-arm64
 
   kubernetesCI:
+      needs: dockerCI
       runs-on: ubuntu-latest
       steps:
         - name: Checkout code
