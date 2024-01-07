@@ -56,6 +56,10 @@ jobs:
         run: |
           git config --global user.email "blackpanterastudio@gmail.com"
           git config --global user.name "GitHub Actions"
+
+      - name: Configure Git Safe Directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Update Kubernetes manifests
         shell: pwsh
         run: |
@@ -63,10 +67,10 @@ jobs:
           foreach ($file in $yamlFiles) {
               (Get-Content $file.FullName) -replace 'old-image', 'twilightsaw/nginx-image' | Set-Content $file.FullName
           }
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git add .
           git commit -m "Update image references"
           git push origin main
+
 
 
 
