@@ -59,13 +59,15 @@ jobs:
       - name: Update Kubernetes manifests
         shell: pwsh
         run: |
-            $yamlFiles = Get-ChildItem -Path ./Config-repo -Filter *.yaml -Recurse
-            foreach ($file in $yamlFiles) {
-                (Get-Content $file.FullName) -replace 'old-image', 'twilightsaw/nginx-image' | Set-Content $file.FullName
-            }
-            git add .
-            git commit -m "Update image references"
-            git push origin main
+          $yamlFiles = Get-ChildItem -Path ./Config-repo -Filter *.yaml -Recurse
+          foreach ($file in $yamlFiles) {
+              (Get-Content $file.FullName) -replace 'old-image', 'twilightsaw/nginx-image' | Set-Content $file.FullName
+          }
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git add .
+          git commit -m "Update image references"
+          git push origin main
+
 
 
         
