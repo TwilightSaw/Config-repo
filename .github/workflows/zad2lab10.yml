@@ -59,19 +59,17 @@ jobs:
 
       - name: Configure Git Safe Directory
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
-
+      
       - name: Checkout Repository
         uses: actions/checkout@v1
       
-      - name: Set up Git user
+      - name: Set up Git user and credentials
         run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-      
-      - name: Ensure the 'main' branch exists and set it to track origin
-        run: |
-          git checkout -B main || git checkout -b main
-          git branch -u origin/main || git branch --set-upstream-to=origin/main
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git config --global credential.helper store
+          git config --global credential.helper 'cache --timeout=3600'
+          git config --global credential.helper '!f() { echo "username=personal_access_token"; echo "password=x-access-token"; }; f'
       
       - name: Update Kubernetes manifests
         shell: pwsh
@@ -83,6 +81,7 @@ jobs:
           git add .
           git commit -m "Update image references"
           git push origin main
+
 
 
 
